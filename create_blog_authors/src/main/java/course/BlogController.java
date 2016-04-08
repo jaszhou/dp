@@ -54,7 +54,7 @@ public class BlogController {
     public static void main(String[] args) throws IOException {
         if (args.length == 0) {
         	
-        	System.out.println("test here ..");
+        	System.out.println("test here ....");
             new BlogController("mongodb://localhost");
         }
         else {
