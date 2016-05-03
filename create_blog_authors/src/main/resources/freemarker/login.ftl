@@ -1,48 +1,43 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <title>Login</title>
-    <style type="text/css">
-      .label {text-align: right}
-      .error {color: red}
-    </style>
+<head>
+<title>Login</title>
 
-  </head>
 
-  <body>
-    Need to Create an account? <a href="/signup">Signup</a><p>
-    <h2>Login</h2>
-    <form method="post">
-      <table>
-        <tr>
-          <td class="label">
-            Username
-          </td>
-          <td>
-            <input type="text" name="username" value="${username}">
-          </td>
-          <td class="error">
-          </td>
-        </tr>
+</head>
 
-        <tr>
-          <td class="label">
-            Password
-          </td>
-          <td>
-            <input type="password" name="password" value="">
-          </td>
-          <td class="error">
-	    ${login_error}
-            
-          </td>
-        </tr>
+<body>
 
-      </table>
+	<#include "menu.ftl">
 
-      <input type="submit">
-    </form>
-  </body>
+
+	<div class="container">
+
+		Need to Create an account? <a href="/signup">Signup</a>
+		<p>
+		<h2>Login</h2>
+
+        <#if login_error?? ><b>${login_error}</b> </#if>
+
+		<form method="post" style="margin-top: 30px;">
+
+			<div class="form-group">
+				<input type="text" class="form-control" placeholder="User Name"
+					name="username" required></input>
+			</div>
+			<div class="form-group">
+				<input type="password" class="form-control" placeholder="Password"
+					name="password" required></input>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Login</button>
+		</form>
+
+
+	</div>
+
+	<#include "footer.ftl">
+</body>
 
 </html>

@@ -1,75 +1,86 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <title>Sign Up</title>
-    <style type="text/css">
-      .label {text-align: right}
-      .error {color: red}
-    </style>
+<head>
+<title>Sign Up</title>
 
-  </head>
+</head>
 
-  <body>
-    Already a user? <a href="/login">Login</a><p>
-    <h2>Signup</h2>
-    <form method="post">
-      <table>
-        <tr>
-          <td class="label">
-            Username
-          </td>
-          <td>
-            <input type="text" name="username" value="${username}">
-          </td>
-          <td class="error">
-	    ${username_error!""}
-            
-          </td>
-        </tr>
+<body>
 
-        <tr>
-          <td class="label">
-            Password
-          </td>
-          <td>
-            <input type="password" name="password" value="">
-          </td>
-          <td class="error">
-	    ${password_error!""}
-            
-          </td>
-        </tr>
+	<#include "menu.ftl">
+	<script src="/js/jquery.form.js"></script>
+    <script src="/js/signup.js"></script>
+	
 
-        <tr>
-          <td class="label">
-            Verify Password
-          </td>
-          <td>
-            <input type="password" name="verify" value="">
-          </td>
-          <td class="error">
-	    ${verify_error!""}
-            
-          </td>
-        </tr>
+	<div class="container">
 
-        <tr>
-          <td class="label">
-            Email (optional)
-          </td>
-          <td>
-            <input type="text" name="email" value="${email}">
-          </td>
-          <td class="error">
-	    ${email_error!""}
-            
-          </td>
-        </tr>
-      </table>
+	   <div class="panel panel-default">
 
-      <input type="submit">
-    </form>
-  </body>
+			<div class="panel-heading">
+				<strong>Signup</strong> 
+			</div>
+
+		
+		<div class="panel-body">
+		
+		<div id="status"></div>
+
+
+		<form id="clientForm" method="post" style="margin-top: 30px;">
+
+			<#if username_error?? ><b>${username_error}</b> </#if>
+
+			<div class="form-group">
+				User Name: <input type="text" class="form-control" placeholder="User Name"
+					name="username" required></input>
+					
+			    <input type='hidden' name='status' value='Inactive'></input>
+			    
+			</div>
+			<div class="form-group">
+				Password: <input class="form-control" placeholder="Password" type="password"
+					name="password" required></input>
+			</div>
+
+			<div class="form-group">
+				Confirm Password: <input type="password" class="form-control"
+					placeholder="Verify Password" type="password" name="verify"
+					required></input>
+			</div>
+
+
+			<div class="form-group">
+				First Name: <input type="text" class="form-control" placeholder="First Name"
+					name="firstname" required></input>
+			</div>
+
+			<div class="form-group">
+				Last Name: <input type="text" class="form-control" placeholder="Last Name"
+					name="lastname" required></input>
+			</div>
+
+
+			<div class="form-group">
+				Email(will be used to active new account): <input type="text" class="form-control"
+					placeholder="Email(required)" name="email" required></input>
+
+			</div>
+
+	
+      
+			<button type="submit" class="btn btn-primary">Signup</button>
+
+
+
+		</form>
+
+	  </div> <!-- panel body -->
+     </div> <!-- panel -->
+
+	</div>
+
+	<#include "footer.ftl">
+</body>
 
 </html>

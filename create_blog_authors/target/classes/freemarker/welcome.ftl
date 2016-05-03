@@ -1,28 +1,34 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <title>Welcome</title>
-    <style type="text/css">
-      .label {text-align: right}
-      .error {color: red}
-    </style>
+<head>
+<title>Welcome</title>
 
-  </head>
 
-  <body>
-    Welcome ${username}
-<p>
+</head>
+
+<body>
+
+	<#include "menu.ftl">
+
+
+	<div class="container">
+
+	
+   <p>
 <ul>
-<li><a href="/">Goto Blog Home</a></li>
+<li><a href="/blog">Goto Blog Home</a></li>
+<li>
+<a href="/newpost">Create a New Post</a>
+</li>
 <li>
 <a href="/logout">Logout</a>
 </li>
-<li>
-Create a New Post (not yet implemented)
-</li>
 
 
-  </body>
+	</div>
+
+	<#include "footer.ftl">
+</body>
 
 </html>
