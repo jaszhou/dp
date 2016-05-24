@@ -1,0 +1,17 @@
+# property file to define port number used by Jetty, etc
+
+port=443
+mongoURL = mongodb://localhost/
+#mongoURL =mongodb://192.168.56.101/
+clientDB = ABN
+upload_dir = /uploads
+#mailserver = intmxeg.corp.dmz
+#serverLocation = https://localhost
+mailserver = mail.cloudscreening.com.au
+#mailserver = localhost
+serverLocation = https://cloudscreening.com.au
+SMTP_AUTH_USER = jason@cloudscreening.com.au
+SMTP_AUTH_PWD  = jasonzhou
+
+
+

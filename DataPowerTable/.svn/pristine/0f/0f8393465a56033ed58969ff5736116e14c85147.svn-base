@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Search History</title>
+              <link rel="stylesheet" href="/css/style.css">
+              <link rel="stylesheet" href="/css/bootstrap.css">
+</head>
+<body>
+
+<#include "menu.ftl">
+
+<div class="container">
+    
+    
+    <p>
+
+      <table>
+        <tr>
+          <td class="label">
+            Date
+          </td>
+          <td>
+            Search Type
+          </td>
+          <td>
+            Keyword
+          </td>
+        </tr>
+
+
+
+ <#if pes??>
+
+    <#list pes as pe>
+        <tr>
+          <td>
+            ${pe["timestamp"]?date}
+          </td>
+          <td>
+            ${pe["search type"]}
+          </td>
+          <td>
+            ${pe["keyword"]}
+          </td>
+
+        </tr>
+
+   </#list>
+
+ </#if>
+
+
+      </table>
+    </div>
+
+  <#include "footer.ftl"></body>
+
+</html>

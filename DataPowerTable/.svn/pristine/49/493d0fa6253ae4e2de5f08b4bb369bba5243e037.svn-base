@@ -1,0 +1,126 @@
+db.PEP.createIndex({"addresses.address.country":1});
+
+db.PEP.createIndex({"addresses.address.country":1});
+db.PEP.createIndex({"addresses.address.countryName":1});
+
+db.PEP.findOne({"addresses.address.country":"CN"})
+
+import JSON into mongodb:
+
+mongoimport --db ABN --collection PEP < PEP1.json
+
+mongoexport --db test --collection traffic --out traffic.json
+mongoexport --db ABN --collection PEPList --out PEPList.json
+
+mongoimport --db ABN --collection PEP < PEPList.json
+
+create a few indexes to avoid the sort memeory error:
+
+db.match.createIndex({"id":-1})
+db.match.createIndex({"resultid":1,"lastUpdate":-1})
+
+
+Import the DFAT list steps:
+
+1. download excel file from:
+http://dfat.gov.au/international-relations/security/sanctions/pages/consolidated-list.aspx#list
+
+2. use Excel to open it and remove the new line chars
+
+http://www.excelblog.ca/remove-line-breaks-from-excel-cell/
+
+3. create a new text file with notepad and save as UTF-8 encoding
+
+4. replace all " to '
+
+5. copy and paste content of excel file into notepad
+
+6. use Perl script (Convert_TAB_CSV.pl) to conver the file
+
+7. change the name field to 'name'
+
+--------------------------------------
+
+import OFAC list
+
+1. download the OFAC list from :
+
+  
+  https://www.treasury.gov/ofac/downloads/sdn.xml
+  
+2. copy 'sdn.xml' to D:\download\xmltodict-master\xmltodict-master
+
+3. run the command python OFAC.py to convert the XML to JSON file
+
+4. import the JSON file into mongoDB
+
+   mongoimport --db ABN --collection OFAC1 < OFAC.json
+   
+5. use ETL class to convert
+
+   ETL.convertOFAC();   
+
+6. export json
+
+mongoexport --db ABN --collection OFAC --out OFAC.json
+
+
+Import UN List
+
+1. download the consolidated list
+
+https://www.un.org/sc/suborg/en/sanctions/un-sc-consolidated-list
+
+2. copy 'consolidated.xml' to D:\download\xmltodict-master\xmltodict-master
+
+3. run the command python UN.py to convert the XML to JSON file
+
+4. import the JSON file into mongoDB
+
+   mongoimport --db ABN --collection UN1 < UN.json
+   
+5. use ETL class to convert
+
+   ETL.convertUN();   
+
+6. export json
+
+mongoexport --db ABN --collection OFAC --out OFAC.json
+
+
+Import UK List
+
+1. download the csv file 
+
+https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets/consolidated-list-of-targets
+
+2. edit and import sanctionsconlist.csv and rename it as UK.csv
+
+3. upload the data to application directly
+
+
+Import EU List
+
+1. download the XML file
+
+http://eeas.europa.eu/cfsp/sanctions/consol-list/index_en.htm
+
+2. 2. copy 'global.xml' to D:\download\xmltodict-master\xmltodict-master
+
+3. run python EU.py
+
+4. import the JSON file into mongoDB
+
+   mongoimport --db ABN --collection EU1 < EU.json
+   
+5. use ETL class to convert
+
+   ETL.convertEU();   
+
+6. export json
+
+   mongoexport --db ABN --collection EU --out EU.json
+
+
+
+

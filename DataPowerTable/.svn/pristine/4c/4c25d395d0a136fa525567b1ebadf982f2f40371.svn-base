@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Search History</title>
+    <style type="text/css">
+      .label {text-align: right}
+      .error {color: red}
+    </style>
+
+  </head>
+
+  <body>
+    Need to Create an account? <a href="/signup">Signup</a><p>
+
+      <table>
+        <tr>
+          <td class="label">
+            Date
+          </td>
+          <td>
+            Search Type
+          </td>
+          <td>
+            Keyword
+          </td>
+        </tr>
+
+
+
+ <#if pes??>
+
+    <#list pes as pe>
+        <tr>
+          <td>
+            ${pe["timestamp"]}
+          </td>
+          <td>
+            ${pe["search type"]}
+          </td>
+          <td>
+            ${pe["keyword"]}
+          </td>
+
+        </tr>
+
+   </#list>
+
+ </#if>
+
+
+      </table>
+
+  <#include "footer.ftl"></body>
+
+</html>
