@@ -89,7 +89,7 @@ public class BlogController {
 
 			Util ut = new Util();
 
-			String port = ut.getPropValues();
+			String port = "443";
 			
 			mongoURL=ut.getPropValues("mongoURL");
 			
@@ -98,6 +98,8 @@ public class BlogController {
 			
 			System.out.println("Default encoding:"+System.getProperty("file.encoding"));
 			Spark.port(Integer.valueOf(port).intValue());
+			
+			
 			Spark.staticFileLocation("/public"); // Static files
 
 //			set404("C:\\spark\\400.html");
@@ -120,10 +122,10 @@ public class BlogController {
 			String truststoreFile = "ssl/keystore";
 			String keystorePassword = "jasonzhou";
 
-			Spark.secure(keystoreFile, keystorePassword, null, null);
-//			Spark.secure(keystoreFile, keystorePassword, truststoreFile, keystorePassword);
+//			Spark.secure(keystoreFile, keystorePassword, null, null);
+			Spark.secure(keystoreFile, keystorePassword, truststoreFile, keystorePassword);
 
-			get("/secureHello", (req, res) -> "Hello Secure World");
+//			get("/secureHello", (req, res) -> "Hello Secure World");
 			
 			// Spark.externalStaticFileLocation("D:\\download\\MongoDB\\blog\\src\\main\\resources\\public");
 

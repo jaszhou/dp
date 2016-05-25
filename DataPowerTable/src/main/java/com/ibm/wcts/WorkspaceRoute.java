@@ -349,27 +349,26 @@ public class WorkspaceRoute extends BlogController {
 			protected void doHandle(Request request, Response response, Writer writer)
 					throws IOException, TemplateException {
 
-				String status = request.queryParams("status");
+				String name = request.queryParams("name");
+				
+				// get the custom list via name
+				MongoCollection<Document> alist = clientDatabase.getCollection(name);
 
 				SimpleHash root = new SimpleHash();
-				
-				System.out.println("got status: "+status);
 
-				List<Document> matches = PLMDAO.getMatchByStatus(status);
-
-
-				root.put("matches", matches);
-
-
+				List<Document> recs = alist.find().into(new ArrayList<Document>());
+				root.put("matches", recs);
 
 				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
 				root.put("username", username);
+
 				List<String> roles = sessionDAO.findUserRoleBySessionId(getSessionCookie(request));
 				root.put("roles", roles);
+				
+				response.raw().setContentType("application/octet-stream");
+			    response.header("Content-Disposition","inline; filename="+"dpt.csv");
 
-				
-				
-				template.process(root, writer);
+			    template.process(root, writer);
 
 			}
 		});
@@ -381,12 +380,9 @@ public class WorkspaceRoute extends BlogController {
 
 				List<Document> actions = null;
 
-				Document session = sessionDAO.findSessionById(getSessionCookie(request));
-
-				String clientname = session.getString("clientname");
-
+			
 				SimpleHash root = new SimpleHash();
-				actions = PLMDAO.getActionList(clientname,100);
+				actions = PEDAO.findPE("1000");
 
 				root.put("actions", actions);
 				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));

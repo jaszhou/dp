@@ -23,6 +23,7 @@
 					<ul class="dropdown-menu   bullet">
 						<li><a href="/newplm">Import New List</a></li>
 						<li><a href="/plmlist">View List</a></li>
+						<li><a href="/actionlist">Change History</a></li>
 					</ul></li>
 
 		

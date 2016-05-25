@@ -208,6 +208,9 @@ public class ListManagementRoute extends BlogController {
 				String listname = request.queryParams("listname");
 				String entityid = request.queryParams("entityid");
 
+				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
+				
+				
 				Document search = new Document("_id", new ObjectId(entityid));
 
 				Document newDoc = new Document("_id", new ObjectId(entityid));
@@ -222,6 +225,8 @@ public class ListManagementRoute extends BlogController {
 
 				Document d = alist.find().first();
 
+				Document before = alist.find(search).first();
+				
 				List<String> names = PLMDAO.getDocFieldName(d);
 
 				// get check box for all cols
@@ -245,20 +250,29 @@ public class ListManagementRoute extends BlogController {
 
 				// search here
 
+				
+				// record the change
+				
 				Document updatEntity = new Document("$set", newDoc);
 				// PLMDAO.updateProfile(searchprofile, updateprofile);
 
 				System.out.println("new Doc: " + updatEntity);
 
 				alist.updateOne(search, updatEntity);
+				
+				Document after = alist.find(search).first();
+				
+				PEDAO.auditChange(username,listname, before, after);
+				
+				System.out.println("Record the changes");
 
-				d = alist.find(search).first();
+
+//				d = alist.find(search).first();
 
 				SimpleHash root = new SimpleHash();
 
 				root.put("listname", listname);
-				root.put("listdoc", d);
-				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
+				root.put("listdoc", after);
 				root.put("username", username);
 				List<String> roles = sessionDAO.findUserRoleBySessionId(getSessionCookie(request));
 				root.put("roles", roles);

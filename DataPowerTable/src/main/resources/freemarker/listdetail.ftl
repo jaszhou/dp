@@ -42,47 +42,7 @@
                 </table>
                </td> 
             
-            <#elseif key == 'dobs'>
-               
-			   <td>
-			    <table class="table table-bordered table-striped">
-                <@dump_dobs value />
-                </table>
-               </td> 
-
-            <#elseif key == 'addresses'>
-               
-			   <td>
-			    <table class="table table-bordered table-striped">
-                <@dump_addrs value />
-                </table>
-               </td> 
-
-            <#elseif key == 'titles'>
-               
-			   <td>
-			    <table class="table table-bordered table-striped">
-                <@dump_titles value />
-                </table>
-               </td> 
-
-            <#elseif key == 'pobs'>
-               
-			   <td>
-			    <table class="table table-bordered table-striped">
-                <@dump_pobs value />
-                </table>
-               </td> 
-
-            <#elseif key == 'ids'>
-               
-			   <td>
-			    <table class="table table-bordered table-striped">
-                <@dump_ids value />
-                </table>
-               </td> 
-
-
+        
             <#elseif key == 'Answer Unit'>
                
 			   <td>
@@ -119,6 +79,9 @@
 				class="btn btn-default">Add Enity</a> 
 			<a href="/searchentity?listname=${listname}" class="btn btn-default">Search
 				Enity</a>
+			<a  id="export" href="/inboxexportcsv?name=${listname}" class="btn btn-default pull-right"><span class="glyphicon glyphicon-cloud-download"></span> Export to .CSV file</a>
+				
+				
 			</td> 
 
            <#if recs??>

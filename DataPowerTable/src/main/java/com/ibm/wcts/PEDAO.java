@@ -64,6 +64,25 @@ public class PEDAO {
             throw e;
         }
     }
+    
+    // validates that username is unique and insert into db
+    public boolean auditChange(String username,String listname, Document before, Document after) {
+
+
+        Document pe = new Document();
+
+        pe.append("username", username).append("listname", listname)
+        .append("timestamp", new Date()).append("before", before).append("after", after);
+
+        try {
+            pesCollection.insertOne(pe);
+            return true;
+        } catch (MongoWriteException e) {
+        	e.printStackTrace();
+            throw e;
+        }
+    }
+
 
 	public List<Document> findPE(String username, String limit) {
 
@@ -95,6 +114,34 @@ public class PEDAO {
 		return pes;
 	}
 
+	public List<Document> findPE(String limit) {
+
+		List<Document> pes = new ArrayList<Document>();
+		Iterator<Document> it = null;
+
+		int l=100; //use 100 records as default
+		
+		if(limit !=null){
+			l=Integer.valueOf(limit).intValue();
+		}
+		it = pesCollection.find()
+				.sort(new Document("timestamp",-1))
+				.limit(l)
+				.iterator();
+		
+		
+
+		while (it.hasNext()) {
+			Document d = (Document) it.next();
+
+			pes.add(d);
+		}
+
+		// System.out.println(abns);
+
+		return pes;
+	}
+	
 //    public Iterator<Document> findABN(String abnNum, String busName) {
 //    	
 //    	Iterator abns;

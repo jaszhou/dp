@@ -6,11 +6,24 @@
         </#if> 
       </#list> 
     </#macro> 
-
     <#if matches??>
-          <#t>ID,BatchID,RecID,Names Match,Status,LastUpdate
-      <#list matches as match>
-			${match["id"]?c}<#t>,${match["batchid"]}<#t>, <#t>${match["recid"]}<#t>,<#t>"<@dumpName match["input"]/>"<#t>,${match["status"]}<#t>,${match["lastUpdate"]?datetime}
-	  </#list>
+       <#t><@compress single_line=true>
+		<#list matches[0]?keys as key> 
+			<#t>${key}<#t>,
+		</#list>			
+   	</@compress>		
+     <#list matches as match>
+	   <#t><@compress single_line=true>
+	   	<#list match?keys as key> 
+				<#if match[key]??>
+                  <#assign value = match[key]>
+                <#else>
+                  <#assign value = "">
+				</#if>
+				<#t>${value}<#t>,
+		</#list>	
+		</@compress>		
+      
+     </#list>
     </#if>
 
