@@ -76,22 +76,21 @@ public class BlogController {
 	static BlogPostDAO blogPostDAO;
 	static UserDAO userDAO;
 	static SessionDAO sessionDAO;
-	static ABNDAO ABNDAO;
+
 	static PLMDAO PLMDAO;
-	static PEDAO PEDAO;
+
 	static MongoDatabase clientDatabase;
-	static String mongoURL = "mongodb://192.168.56.101";
+	static String mongoURL = "";
 
 
 	
 	public static void main(String[] args) throws IOException {
 		if (args.length == 0) {
 
-			Util ut = new Util();
-
-			String port = ut.getPropValues();
 			
-			mongoURL=ut.getPropValues("mongoURL");
+			String port = "8082";
+			
+			mongoURL="mongodb://localhost";
 			
 
 			System.out.println("server port: " + port);
@@ -125,13 +124,11 @@ public class BlogController {
 			setupConnection();
 
 			new BlogController();
-			new WorkspaceRoute();
-			new PLMSearchRoute();
-			new ListManagementRoute();
+		
+		
+			
 			new UserManagementRoute();
-			new Restful();
-
-			// new BlogController("mongodb://localhost");
+		
 		}
 	}
 
@@ -140,9 +137,9 @@ public class BlogController {
 
 		try {
 
-			Util ut = new Util();
+//			Util ut = new Util();
 
-			mongoURL=ut.getPropValues("mongoURL");
+			mongoURL="mongodb://localhost";
 			
 			mongoClient = new MongoClient(new MongoClientURI(mongoURL));
 
@@ -150,7 +147,7 @@ public class BlogController {
 			
 
 			
-			String clientDB =ut.getPropValues("clientDB");
+			String clientDB ="ABN";
 
 
 			clientDatabase = mongoClient.getDatabase(clientDB);
@@ -159,8 +156,8 @@ public class BlogController {
 			userDAO = new UserDAO(clientDatabase);
 			sessionDAO = new SessionDAO(clientDatabase);
 
-			ABNDAO = new ABNDAO(clientDatabase);
-			PEDAO = new PEDAO(clientDatabase);
+		
+			
 			PLMDAO = new PLMDAO(clientDatabase);
 
 			cfg = createFreemarkerConfiguration();
@@ -382,112 +379,6 @@ public class BlogController {
 			}
 		});
 
-			// present the login page
-		get("/lookup", new FreemarkerBasedRoute("lookup.ftl") {
-			@Override
-			protected void doHandle(Request request, Response response, Writer writer)
-					throws IOException, TemplateException {
-
-				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
-
-				String abnNum = request.queryParams("abn_num");
-				String acnNum = request.queryParams("acn_num");
-				String busName = request.queryParams("bus_name");
-				List<Document> abns = null;
-				List<Document> acns = null;
-
-				System.out.println("ABN: ABN submitted: " + abnNum + "  " + busName);
-
-				SimpleHash root = new SimpleHash();
-
-				if (abnNum != null) {
-					abns = ABNDAO.findABN(abnNum, busName);
-
-					if (username != null) {
-						// save previous enquery
-						PEDAO.addPE(username, "ABN", abnNum);
-					}
-
-					root.put("abns", abns);
-				}
-
-				if (acnNum != null) {
-					acns = ABNDAO.findACN(acnNum);
-
-					if (username != null) {
-						// save previous enquery
-						PEDAO.addPE(username, "ACN", acnNum);
-					}
-
-					root.put("acns", acns);
-				}
-
-				root.put("abn_num", "");
-				root.put("username", username);
-
-				template.process(root, writer);
-			}
-		});
-
-		// process output coming from login form. On success redirect folks to
-		// the welcome page
-		// on failure, just return an error and let them try again.
-		post("/lookup", new FreemarkerBasedRoute("lookup.ftl") {
-			@Override
-			protected void doHandle(Request request, Response response, Writer writer)
-					throws IOException, TemplateException {
-
-				String abnNum = request.queryParams("abn_num");
-				String busName = request.queryParams("bus_name");
-
-				System.out.println("ABN: ABN submitted: " + abnNum + "  " + busName);
-
-				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
-
-				List<Document> abns = ABNDAO.findABN(abnNum, busName);
-
-				if (username != null) {
-					// save previous enquery
-					PEDAO.addPE(username, "ABN", abnNum + " " + busName);
-				}
-
-				SimpleHash root = new SimpleHash();
-
-				root.put("abns", abns);
-				root.put("username", username);
-
-				template.process(root, writer);
-
-				// Document user = userDAO.validateLogin(username, password);
-
-				// if (user != null) {
-				//
-				// // valid user, let's log them in
-				// String sessionID =
-				// sessionDAO.startSession(user.get("_id").toString());
-				//
-				// if (sessionID == null) {
-				// response.redirect("/internal_error");
-				// }
-				// else {
-				// // set the cookie for the user's browser
-				// response.raw().addCookie(new Cookie("session", sessionID));
-				//
-				// response.redirect("/welcome");
-				// }
-				// }
-				// else {
-				// SimpleHash root = new SimpleHash();
-				//
-				//
-				// root.put("username",
-				// StringEscapeUtils.escapeHtml4(username));
-				// root.put("password", "");
-				// root.put("login_error", "Invalid Login");
-				// template.process(root, writer);
-				// }
-			}
-		});
 
 		// tells the user that the URL is dead
 		get("/post_not_found", new FreemarkerBasedRoute("post_not_found.ftl") {
