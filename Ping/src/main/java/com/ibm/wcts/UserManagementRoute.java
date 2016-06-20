@@ -34,7 +34,72 @@ public class UserManagementRoute extends BlogController {
 
 	void initializeRoutes() throws IOException {
 
-		
+		post("/newclient", new FreemarkerBasedRoute("newclient.ftl") {
+
+			@Override
+			protected void doHandle(Request request, Response response, Writer writer)
+					throws IOException, TemplateException {
+				String clientname = request.queryParams("clientname");
+				String status = request.queryParams("status");
+				String email = request.queryParams("email");
+				String workphone = request.queryParams("workphone");
+				String mobilephone = request.queryParams("mobilephone");
+				String address = request.queryParams("address");
+
+				Document client = new Document("id",PLMDAO.getClientId());
+				
+				client.append("clientname", clientname).append("status", status).append("email", email)
+						.append("workphone", workphone).append("mobilephone", mobilephone).append("email", email)
+						.append("address", address);
+
+				PLMDAO.addClient(client);
+				
+				SimpleHash root = new SimpleHash();
+
+				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
+				List<String> roles = sessionDAO.findUserRoleBySessionId(getSessionCookie(request));
+				root.put("roles", roles);
+				
+				root.put("username", username);
+
+
+				template.process(root, writer);
+
+			}
+
+		});
+
+		get("/newclient", new FreemarkerBasedRoute("newclient.ftl") {
+
+			@Override
+			protected void doHandle(Request request, Response response, Writer writer)
+					throws IOException, TemplateException {
+				String clientname = request.queryParams("clientname");
+				String status = request.queryParams("status");
+				String email = request.queryParams("email");
+				String workphone = request.queryParams("workphone");
+				String mobilephone = request.queryParams("mobilephone");
+				String address = request.queryParams("address");
+
+				Document client = new Document();
+				client.append("clientname", clientname).append("status", status).append("email", email)
+						.append("workphone", workphone).append("mobilephone", mobilephone).append("email", email)
+						.append("address", address);
+
+				SimpleHash root = new SimpleHash();
+
+				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
+				List<String> roles = sessionDAO.findUserRoleBySessionId(getSessionCookie(request));
+				root.put("roles", roles);
+				
+				root.put("username", username);
+
+				template.process(root, writer);
+
+			}
+
+		});
+
 		get("/userlist", new FreemarkerBasedRoute("userlist.ftl") {
 			@Override
 			protected void doHandle(Request request, Response response, Writer writer)
@@ -55,9 +120,46 @@ public class UserManagementRoute extends BlogController {
 			}
 		});
 
+		get("/clientlist", new FreemarkerBasedRoute("clientlist.ftl") {
+			@Override
+			protected void doHandle(Request request, Response response, Writer writer)
+					throws IOException, TemplateException {
 
+				List<Document> recs = PLMDAO.getClientList(100);
 
-		
+				SimpleHash root = new SimpleHash();
+				root.put("recs", recs);
+				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
+				List<String> roles = sessionDAO.findUserRoleBySessionId(getSessionCookie(request));
+				root.put("roles", roles);
+				
+				root.put("username", username);
+
+				template.process(root, writer);
+
+			}
+		});
+
+		get("/eventlist", new FreemarkerBasedRoute("eventlist.ftl") {
+			@Override
+			protected void doHandle(Request request, Response response, Writer writer)
+					throws IOException, TemplateException {
+
+				List<Document> recs = PLMDAO.getEventList(100);
+
+				SimpleHash root = new SimpleHash();
+				root.put("recs", recs);
+				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
+				List<String> roles = sessionDAO.findUserRoleBySessionId(getSessionCookie(request));
+				root.put("roles", roles);
+				
+				root.put("username", username);
+
+				template.process(root, writer);
+
+			}
+		});
+
 		// handle the signup post
 		post("/signup", new FreemarkerBasedRoute("signup.ftl") {
 			@Override
@@ -201,8 +303,109 @@ public class UserManagementRoute extends BlogController {
 			}
 		});
 
-		
-	
+		get("/activate", new FreemarkerBasedRoute("activation.ftl") {
+			@Override
+			protected void doHandle(Request request, Response response, Writer writer)
+					throws IOException, TemplateException {
+
+				String token = request.queryParams("token");
+				String username = request.queryParams("username");
+
+				SimpleHash root = new SimpleHash();
+
+				if(userDAO.activateAccount(token)){
+					
+					// good user, let's start a session
+					String sessionID = sessionDAO.startSession(username);
+					System.out.println("Session ID is" + sessionID);
+
+					response.raw().addCookie(new Cookie("session", sessionID));
+					response.redirect("/plmlist");
+				}else{
+					
+					root.put("username_error", "Failed to activate user!");
+					template.process(root, writer);
+				}
+				
+			}
+		});
+
+		post("/adminactivate", new FreemarkerBasedRoute("activation.ftl") {
+			@Override
+			protected void doHandle(Request request, Response response, Writer writer)
+					throws IOException, TemplateException {
+
+				
+				String username = request.queryParams("username");
+
+				System.out.println("activate user");
+				
+				SimpleHash root = new SimpleHash();
+
+				if(userDAO.activateAccountAdmin(username)){
+					
+					// good user, let's start a session
+//					String sessionID = sessionDAO.startSession(username);
+//					System.out.println("Session ID is" + sessionID);
+
+//					response.raw().addCookie(new Cookie("session", sessionID));
+//					response.redirect("/welcome");
+				}else{
+					
+					root.put("username_error", "Failed to activate user!");
+					template.process(root, writer);
+				}
+				
+			}
+		});
+
+		post("/admindeactivate", new FreemarkerBasedRoute("activation.ftl") {
+			@Override
+			protected void doHandle(Request request, Response response, Writer writer)
+					throws IOException, TemplateException {
+
+				
+				String username = request.queryParams("username");
+
+				System.out.println("deactivate user");
+				
+				SimpleHash root = new SimpleHash();
+
+				if(userDAO.deactivateAccountAdmin(username)){
+					
+					// good user, let's start a session
+					String sessionID = sessionDAO.startSession(username);
+					System.out.println("Session ID is" + sessionID);
+
+//					response.raw().addCookie(new Cookie("session", sessionID));
+//					response.redirect("/welcome");
+				}else{
+					
+					root.put("username_error", "Failed to activate user!");
+					template.process(root, writer);
+				}
+				
+			}
+		});
+
+		get("/about", new FreemarkerBasedRoute("about.ftl") {
+			@Override
+			protected void doHandle(Request request, Response response, Writer writer)
+					throws IOException, TemplateException {
+
+				SimpleHash root = new SimpleHash();
+
+				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
+
+				root.put("username", username);
+
+				List<String> roles = sessionDAO.findUserRoleBySessionId(getSessionCookie(request));
+				root.put("roles", roles);
+
+				template.process(root, writer);
+			}
+		});
+
 
 		get("/resetpwd", new FreemarkerBasedRoute("resetpwd.ftl") {
 			@Override

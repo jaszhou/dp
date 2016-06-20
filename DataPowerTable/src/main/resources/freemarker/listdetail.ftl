@@ -26,11 +26,14 @@
 			<table class="table table-striped table-hover">
 				<#list node?keys as key> 
 				
+				<#if key !='_id'>
+				
 				<#if node[key]??>
                   <#assign value = node[key]>
                 <#else>
                   <#assign value = "">
 				</#if>
+				
 				<tr>
 					<td>${key}</td>
 				
@@ -71,6 +74,7 @@
 			
 				</tr>
 			
+			      </#if>
 				</#list>
 			</table>
 			</#macro> 

@@ -86,6 +86,10 @@
 
 			<button type="submit" class="btn btn-default">Save</button>
 			<a href="/list?name=${listname}" class="btn btn-default">Back</a>
+			
+			  <a href="/editentity?_id=${listdoc._id}&listname=${listname}"
+						class="btn btn-default">Edit</a> 
+						
 	</div>
 
 	<#include "footer.ftl">
