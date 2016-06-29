@@ -354,6 +354,8 @@ public class ListManagementRoute extends BlogController {
 
 				// get the custom list via name
 				MongoCollection<Document> alist = clientDatabase.getCollection(name);
+				
+				
 
 				SimpleHash root = new SimpleHash();
 
@@ -380,7 +382,7 @@ public class ListManagementRoute extends BlogController {
 				int skip_num = pnum * pagesize;
 				int limit_num = pagesize;
 
-				List<Document> recs = alist.find().skip(skip_num).limit(limit_num).into(new ArrayList<Document>());
+				List<Document> recs = alist.find().skip(skip_num).limit(limit_num).sort(new Document("_id",-1)).into(new ArrayList<Document>());
 				root.put("recs", recs);
 
 				p.put("pageNumber", pnum);
