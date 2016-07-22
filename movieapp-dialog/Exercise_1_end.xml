@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dialog xsi:noNamespaceSchemaLocation="WatsonDialogDocument_1.0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<flow>
+		<folder label="Main">
+			<output>
+
+				<prompt selectionType="RANDOM">
+					<item>Hello, welcome to Watson, what's your name? </item>
+					<item>What can I call you?</item>
+					<item>What's your name?</item>
+				</prompt>
+
+				<goto ref="getUserInput_2449614" />
+			</output>
+
+			<output id="main">
+
+				<prompt selectionType="RANDOM">
+					<item>Hello {User_Name}, Do you want a story, test or chat? </item>
+				</prompt>
+				<getUserInput id="getUserInput_2449612">
+				    
+				    <search ref="search_folder">
+                        <classifier policy="SEARCHMODE_CLASSIFIER"
+                            threshold="0.6" exactMatchFirst="true"
+                            fuzzyThreshold="0.1">
+                            <customParams></customParams>
+                        </classifier>
+                    </search>
+
+
+
+					<default>
+						<output>
+							<prompt selectionType="RANDOM">
+								<item>I am sorry, I did not understand your question. Please try
+									asking another one.
+								</item>
+							</prompt>
+						</output>
+					</default>
+
+				</getUserInput>
+
+
+			</output>
+
+			<output id="school">
+				<prompt selectionType="RANDOM">
+					<item>Did you have any other questions today? What is your name?
+					</item>
+				</prompt>
+
+				<getUserInput id="getUserInput_2449614">
+					<search ref="folder_2449611" />
+
+
+					<default>
+						<output>
+							<prompt selectionType="RANDOM">
+								<item>I am sorry, I did not understand your question. Please try
+									asking another one.
+								</item>
+							</prompt>
+						</output>
+					</default>
+
+				</getUserInput>
+			</output>
+
+
+		</folder>
+
+    	<folder label="Library">
+	       <folder label="nlc" id="search_folder">
+		
+					<input>
+						<grammar>
+							<item>INTENT: story</item>
+							<item> $ story  </item>
+						</grammar>
+						<output>
+							<prompt selectionType="RANDOM">
+								<item> OK! Let me tell you a story </item>
+							</prompt>
+
+							<goto ref="story" />
+
+						</output>
+					</input>
+					
+					<input>
+						<grammar>
+							<item>INTENT: test</item>
+							<item> $ test  </item>
+						</grammar>
+						<output>
+							<prompt selectionType="RANDOM">
+								<item> OK! Let's have a test </item>
+							</prompt>
+
+							<goto ref="test" />
+
+						</output>
+					</input>
+
+					<input>
+						<grammar>
+							<item> $ chat  </item>
+						</grammar>
+						<output>
+							<prompt selectionType="RANDOM">
+								<item> OK! Let's chat </item>
+							</prompt>
+
+							<goto ref="chat" />
+
+						</output>
+					</input>
+
+			</folder>
+	
+			<folder label="Live Content" id="folder_2449611">
+
+				<input>
+
+					<grammar>
+						<item>My name is</item>
+						<item>$ my name is (DYNAMIC_DATA)={User_Name}</item>
+						<item>$ I am (DYNAMIC_DATA)={User_Name}</item>
+						<item>$ I'm (DYNAMIC_DATA)={User_Name}</item>
+						<item>$ called (DYNAMIC_DATA)={User_Name}</item>
+						<item>$ call me (DYNAMIC_DATA)={User_Name}</item>
+						<item>$ known as (DYNAMIC_DATA)={User_Name}</item>
+					
+					</grammar>
+					<action varName="User_Name" operator="SET_TO">{User_Name.source}
+					</action>
+
+
+                    <goto ref="story" />
+					<goto ref="main" />
+
+					<output id="chat">
+						<prompt selectionType="RANDOM">
+							<item> Nice to meet you {User_Name} are you going to school?
+							</item>
+						</prompt>
+
+						<getUserInput>
+
+							<input>
+								<grammar>
+									<item> $ yes * </item>
+									<item> $ yes  </item>
+								</grammar>
+								<output>
+									<prompt selectionType="RANDOM">
+										<item> Very well, how many days per week? </item>
+									</prompt>
+
+									<getUserInput>
+
+										<input>
+											<grammar>
+												<item> * days </item>
+												<item> *  </item>
+											</grammar>
+
+											<output id="test">
+												<prompt selectionType="RANDOM">
+													<item> You are such a good boy! Let me ask you a question,
+														if you can answer it, you will get a treat. Here's the
+														question, do you know what's two plus two?
+													</item>
+													
+													<item> Here's the question, there're 10 birds on the tree. A hunterman shot one bird with gun, 
+													   how many birds left on the tree?
+													</item>
+													
+												</prompt>
+
+												<getUserInput>
+
+													<input>
+														<grammar>
+															<item> * four  </item>
+															<item> ? four  </item>
+															<item> ? for  </item>
+															<item> ? full  </item>
+														</grammar>
+														<output>
+															<prompt selectionType="RANDOM">
+																<item> Correct, well done, {User_Name}! Now is the
+																	treat! There's a lollipop in the vase left to the TV.
+																	Enjoy!
+																</item>
+															</prompt>
+
+															<goto ref="main" />
+														</output>
+													</input>
+													
+														<input>
+														<grammar>
+															<item> * nine  </item>
+															<item> ? night  </item>
+															<item> ? nine  </item>
+															
+														</grammar>
+														<output>
+															<prompt selectionType="RANDOM">
+																<item> That's a good answer.
+															
+																</item>
+															</prompt>
+
+															<goto ref="main" />
+														</output>
+													</input>
+													
+														<input>
+														<grammar>
+															<item> zero * </item>
+															<item> ? zero  </item>
+															<item> ? nothing  </item>
+															<item> ? none  </item>
+															
+														</grammar>
+														<output>
+															<prompt selectionType="RANDOM">
+																<item> That's a really smart answer.
+															           You deserve a treat.
+																</item>
+															</prompt>
+
+															<goto ref="main" />
+														</output>
+													</input>
+													
+
+													<default>
+														<output>
+															<prompt selectionType="RANDOM">
+																<item>Not really,try again</item>
+															</prompt>
+														</output>
+													</default>
+
+
+												</getUserInput>
+
+											</output>
+										</input>
+									</getUserInput>
+								</output>
+							</input>
+
+							<input>
+								<grammar>
+									<item> no * </item>
+									<item> $ no </item>
+								</grammar>
+								<output>
+									<prompt selectionType="RANDOM">
+										<item> You are so lucky. Can you tell me why ? </item>
+									</prompt>
+
+									<getUserInput>
+										<input>
+											<grammar>
+												<item> *  </item>
+											</grammar>
+											<output>
+												<prompt selectionType="RANDOM">
+													<item> Good one! </item>
+												</prompt>
+												<goto ref="main" />
+											</output>
+										</input>
+									</getUserInput>
+
+								</output>
+							</input>
+
+							<input>
+							
+							
+						
+										
+								<output id="story">
+									<prompt selectionType="RANDOM">
+										<item>
+										    Which story do you like?
+							                
+										</item>
+									</prompt>
+
+									<getUserInput>
+
+										<input>
+										
+												<grammar>
+													
+													<item>(DYNAMIC_DATA)={Story_Name}</item>
+												</grammar>
+							
+												<action varName="Story_Name" operator="SET_TO">{Story_Name.source}
+												</action>
+												
+									
+											<output>
+												<prompt selectionType="RANDOM">
+													<item> storyname #{Story_Name}# </item>
+												</prompt>
+												<goto ref="main" />
+											</output>
+										</input>
+
+								
+									</getUserInput>
+
+								</output>
+							</input>
+
+
+
+
+
+						</getUserInput>
+
+					</output>
+
+
+				</input>
+
+
+
+
+			</folder>
+			<folder label="Storage" />
+		</folder>
+		<folder label="Global" />
+		<folder label="Concepts" />
+	</flow>
+	<entities>
+		<entity name="DYNAMIC_DATA">
+			<value name="DataCapture" value="DataCapture">
+				<grammar>
+					<item>*</item>
+				</grammar>
+			</value>
+		</entity>
+	</entities>
+	<constants>
+		<var_folder name="Home" />
+	</constants>
+	<variables>
+		<var_folder name="Home">
+			<var name="User_Name" type="TEXT" description="The user's name" />
+			<var name="Story_Name" type="TEXT"
+				description="the story name" />
+		</var_folder>
+	</variables>
+
+	<settings>
+		<setting name="USERIDNUM" type="USER">69810</setting>
+		<setting name="EMAIL" type="USER">mwacho@gmail.com</setting>
+		<setting name="PASSWORD" type="USER">mct:f972618f697988c5f1808da2115a54f0
+		</setting>
+		<setting name="FIRSTNAME" type="USER">Matthew</setting>
+		<setting name="LASTNAME" type="USER">james Wachowiak</setting>
+		<setting name="COUNTRY" type="USER">US</setting>
+		<setting name="STATE" type="USER"></setting>
+		<setting name="CITY" type="USER">New York</setting>
+		<setting name="BDAY" type="USER">1</setting>
+		<setting name="BMONTH" type="USER">1</setting>
+		<setting name="BYEAR" type="USER">2001</setting>
+		<setting name="SEX" type="USER">Male</setting>
+		<setting name="DISPLAYNAME" type="USER">Matthew</setting>
+		<setting name="PROVIDESECURITYPASSWORD" type="USER">false</setting>
+		<setting name="SECURITYPASSWORD" type="USER"></setting>
+		<setting name="SHOWPERSPROFILE" type="USER">false</setting>
+		<setting name="USETYPE" type="USER">0</setting>
+		<setting name="DATEJOINED" type="USER">2015-03-30 15:08:32.0
+		</setting>
+		<setting name="LASTLOGIN" type="USER">2015-03-30 15:08:32.0</setting>
+		<setting name="LOGINCOUNT" type="USER">1</setting>
+		<setting name="CREDIT" type="USER">-100</setting>
+		<setting name="CONVCOUNT" type="USER">2</setting>
+		<setting name="PERSONALITYTYPEID" type="USER">6</setting>
+		<setting name="SHOWSENDMESSAGE" type="USER">true</setting>
+		<setting name="ACTIVATED" type="USER">true</setting>
+		<setting name="MESSENGEREMAIL" type="USER"></setting>
+		<setting name="MESSENGERPASSWORD" type="USER"></setting>
+		<setting name="SENDCHATEMAIL" type="USER">true</setting>
+		<setting name="SENDFAVEMAIL" type="USER">true</setting>
+		<setting name="CACHE" type="USER">false</setting>
+		<setting name="CLASSTYPE" type="USER">3</setting>
+		<setting name="AUTOLEARN" type="USER">false</setting>
+		<setting name="LANGUAGE" type="USER">EN</setting>
+		<setting name="RESPONSETIME" type="USER">0</setting>
+		<setting name="MAXAUTOLEARNITEMS" type="USER">0</setting>
+		<setting name="NUMAUTOSETRELATED" type="USER">0</setting>
+		<setting name="TIMEZONEID" type="USER">Australia/Sydney</setting>
+		<setting name="AUTOSETRELATEDNODEID" type="USER">0</setting>
+		<setting name="RETURNTOCHATNODEID" type="USER">0</setting>
+		<setting name="INPUTMASKTYPE" type="USER">0</setting>
+		<setting name="NUMLOGINATTEMPTS" type="USER">0</setting>
+		<setting name="CONCEPTMATCHING" type="USER">0</setting>
+		<setting name="CLS_SEARCH_MODE">1</setting>
+        <setting name="CLS_MODEL">0</setting>
+        <setting name="CLS_ENDPOINT"></setting>
+        <setting name="CLS_USERNAME">77b2898e-0065-434d-8fdd-359b3f2e6415</setting>
+        <setting name="CLS_PASSWORD">Dq00uqhKGthD</setting>
+        <setting name="CLS_MODELNAME">c115e5x71-nlc-405</setting>
+        <setting name="CLS_ADVANCED_SETTINGS">true</setting>
+        <setting name="CLS_MAXNBEST">3</setting>
+        <setting name="CLS_USE_OFFTOPIC">false</setting>
+	</settings>
+</dialog>
