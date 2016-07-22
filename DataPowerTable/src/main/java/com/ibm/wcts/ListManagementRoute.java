@@ -659,7 +659,7 @@ public class ListManagementRoute extends BlogController {
 
 				System.out.println("search: " + field.toJson());
 
-				List<Document> recs = alist.find(field).into(new ArrayList<Document>());
+				List<Document> recs = alist.find(field).sort(new Document("_id",-1)).into(new ArrayList<Document>());
 
 				SimpleHash root = new SimpleHash();
 

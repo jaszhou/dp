@@ -21,7 +21,7 @@
 
      <#if key != "_id">
 
-       <#if key != "Answer Unit">
+       <#if key != "Answer Unit" && key != "Content" >
     
       <label >${key}</label>
                 <input type="text"

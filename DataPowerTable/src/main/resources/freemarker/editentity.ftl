@@ -26,7 +26,7 @@
 		<label>${key}</label> 
 		
 		
-		<#if key != "Answer Unit">
+		<#if key != "Answer Unit" && key != "Comments" && key != "Content">
 		
 		
 		

@@ -53,6 +53,7 @@ public class PLMDAO {
 	MongoCollection<Document> categoryCollection;
 	MongoCollection<Document> clientCollection;
 	MongoCollection<Document> auditCollection;
+	MongoCollection<Document> storyCollection;
 
 	// private final MongoCollection<Document> batchRecordCollection;
 	public static MongoDatabase abnDatabase;
@@ -82,7 +83,8 @@ public class PLMDAO {
 		metaCollection = abnDatabase.getCollection("meta");
 		clientCollection = abnDatabase.getCollection("client");
 		auditCollection = abnDatabase.getCollection("audit");
-
+		storyCollection = abnDatabase.getCollection("Story");
+		
 		this.abnDatabase = abnDatabase;
 
 		this.init();
@@ -830,6 +832,54 @@ public class PLMDAO {
 		return batchCollection.find(eq("batchid", batchid)).first();
 
 	}
+	
+	public Document findStoryByName(String name) {
+
+		// posts = postsCollection.find().sort(new
+		// Document("date",-1)).limit(limit).into(new ArrayList<Document>());
+		// post = postsCollection.find(eq("permalink",permalink)).first();
+		
+		Document story = null;
+		Document field = new Document();
+		
+		field.append("Name", new Document("$regex", name).append("$options", "i"));
+		
+		
+		if(storyCollection.find(field).first()!=null){
+			
+			System.out.println("Found story "+name);
+			story = storyCollection.find(field).first();
+			
+		}else{
+			story=storyCollection.find(eq("Name", "None")).first();
+			System.out.println("No story found!");
+
+		}
+		return story;
+	}
+	
+	public Document findStoryList() {
+
+		// posts = postsCollection.find().sort(new
+		// Document("date",-1)).limit(limit).into(new ArrayList<Document>());
+		// post = postsCollection.find(eq("permalink",permalink)).first();
+		String mylist="";
+		
+		List<Document> recs = storyCollection.find().into(new ArrayList<Document>());
+
+		for(Document rec:recs){
+			
+			System.out.println("\""+rec.getString("Name")+"\"");
+			if(!(rec.getString("Name")).equals("None")){
+			mylist+=rec.getString("Name")+",";
+			}
+		}
+
+		System.out.println("story list: "+mylist);
+		
+		return new Document("list",mylist);
+	}
+	
 
 	public Document findClientByID(int clientid) {
 

@@ -211,6 +211,15 @@
 	      </tr>
 </#macro>
 
+<#macro dump_comments data>
+
+	      <tr>
+	        <td>
+	         ${data}
+ 
+	        </td>
+	      </tr>
+</#macro>
 
 <#-- private helper macros. it's not recommended to use these macros from 
   -- outside the macro library.

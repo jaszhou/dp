@@ -123,7 +123,9 @@ public class BlogController {
 			String keystorePassword = "jasonzhou";
 
 //			Spark.secure(keystoreFile, keystorePassword, null, null);
-			Spark.secure(keystoreFile, keystorePassword, truststoreFile, keystorePassword);
+	
+			
+//			Spark.secure(keystoreFile, keystorePassword, truststoreFile, keystorePassword);
 
 //			get("/secureHello", (req, res) -> "Hello Secure World");
 			

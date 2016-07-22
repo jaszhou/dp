@@ -54,7 +54,14 @@
                 </table>
                </td> 
 
-
+           <#elseif key == 'Comments'>
+               
+			   <td>
+			    <table class="table table-bordered table-striped">
+                <@dump_comments value />
+                </table>
+               </td> 
+               
              <#else>
 					
 					
