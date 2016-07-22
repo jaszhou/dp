@@ -1,0 +1,34 @@
+
+
+	<div id="sidebar" class="col-sm-1" id="leftCol">
+
+		<ul class="nav nav-stacked" id="sidebar">
+			<li><a href="/inbox/open"><span
+					class="glyphicon glyphicon-envelope"></span> Inbox</a></li>
+			<li><a href="/batchlist">
+			<span class="glyphicon glyphicon-list-alt"></span> Batch</a></li>
+			<li><a href="/profilelist"><span class="glyphicon glyphicon-search"></span> Lookup</a></li>
+			<li><a href="/batch"><span
+					class="glyphicon glyphicon glyphicon-upload"></span> Upload</a></li>
+			<li><a href="/plmlist"><span
+					class="glyphicon glyphicon-th-list"></span> List</a></li>
+			<li><a href="/profilelist"><span
+					class="glyphicon glyphicon-dashboard"></span> Profile</a></li>
+			<li><a href="/rulelist"><span
+					class="glyphicon glyphicon-cog"></span> Rule</a></li>
+			<li><a href="/resultlist"><span
+					class="glyphicon glyphicon-tasks"></span> Result</a></li>
+			<li><a href="/searchmatch"><span
+					class="glyphicon glyphicon-ok"></span> Review</a></li>
+			<li>		
+			  <a href="#" style="text-decoration:none; ">
+                 <img alt="SSL Certificate" src="https://www.instantssl.com/ssl-certificate-images/support/comodo_secure_100x85_transp.png" style="border: 0px;" /><br />
+               
+              </a>
+            </li>
+					
+		</ul>
+
+	</div>
+
+	
