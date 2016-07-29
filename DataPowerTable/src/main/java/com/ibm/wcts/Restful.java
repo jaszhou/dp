@@ -10,6 +10,7 @@ import static spark.Spark.post;
 import java.io.IOException;
 
 import org.bson.Document;
+import org.jsoup.Jsoup;
 
 public class Restful extends BlogController {
 
@@ -22,6 +23,11 @@ public class Restful extends BlogController {
 		}
 
 	}
+	
+	public static String html2text(String html) {
+	    return Jsoup.parse(html).text();
+	}
+	
 
 	void initializeRoutes() throws IOException {
 
@@ -44,6 +50,18 @@ public class Restful extends BlogController {
 
 		}, new JsonTransformer());
 
+		get("/wiki/:keyword", "application/json", (request, response) -> {
+//			String name = request.params(":name");
+//			System.out.println("name: " + name);
+			response.raw().setContentType("application/json");
+
+			String keyword = request.params(":keyword");
+			System.out.println("keyword: " + keyword);
+			
+			return PLMDAO.findWiki(keyword);
+
+		}, new JsonTransformer());
+		
 		get("/batchlistjs", "application/json", (request, response) -> {
 
 			response.raw().setContentType("application/json");
