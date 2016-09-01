@@ -858,6 +858,30 @@ public class PLMDAO {
 		return story;
 	}
 	
+	public Document findMemo(String name) {
+
+		
+		Document story = null;
+		Document field = new Document();
+		
+		field.append("Content", new Document("$regex", name).append("$options", "i")).append("Tag", "Memo");
+		
+		System.out.println("search "+field.toJson());
+		
+		
+		if(storyCollection.find(field).first()!=null){
+			
+			System.out.println("Found story "+name);
+			story = storyCollection.find(field).first();
+			
+		}else{
+			story=storyCollection.find(eq("Name", "None")).first();
+			System.out.println("No story found!");
+
+		}
+		return story;
+	}
+	
 	public Document findStoryList() {
 
 		// posts = postsCollection.find().sort(new
@@ -871,7 +895,7 @@ public class PLMDAO {
 			
 			System.out.println("\""+rec.getString("Name")+"\"");
 			if(!(rec.getString("Name")).equals("None")){
-			mylist+=rec.getString("Name")+",";
+			mylist+=rec.getString("Name")+".";
 			}
 		}
 
@@ -895,6 +919,38 @@ public class PLMDAO {
 		return new Document("answer",answer);
 	}
 
+	public Document saveMemo(String keyword) {
+		
+		Document document = new Document();
+		
+		document.append("Tag", "Memo");
+		document.append("Name", "Memo");
+		document.append("Content", keyword);
+		
+		
+		
+		storyCollection.insertOne(document);
+		
+		return document;
+
+	}
+	
+	
+	public Document searchWiki(String keyword) {
+
+		// posts = postsCollection.find().sort(new
+		// Document("date",-1)).limit(limit).into(new ArrayList<Document>());
+		// post = postsCollection.find(eq("permalink",permalink)).first();
+	
+		String answer = Restful.html2text(RestClient.searchAnswer(keyword));
+		
+		if(answer==""){
+			answer="Can not be found";
+		}
+		
+		return new Document("answer",answer);
+	}
+	
 	public Document findClientByID(int clientid) {
 
 		// posts = postsCollection.find().sort(new

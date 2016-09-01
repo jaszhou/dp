@@ -8,6 +8,7 @@ import static spark.Spark.get;
 import static spark.Spark.post;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import org.bson.Document;
 import org.jsoup.Jsoup;
@@ -32,6 +33,15 @@ public class Restful extends BlogController {
 	void initializeRoutes() throws IOException {
 
 		// GET http://localhost:8082/batchbyid/1005
+		get("/search/:name", "application/json", (request, response) -> {
+			String name = request.params(":name");
+			System.out.println("name: " + name);
+			response.raw().setContentType("application/json");
+
+			return PLMDAO.findMemo(name);
+
+		}, new JsonTransformer());
+		
 		get("/story/:name", "application/json", (request, response) -> {
 			String name = request.params(":name");
 			System.out.println("name: " + name);
@@ -40,6 +50,7 @@ public class Restful extends BlogController {
 			return PLMDAO.findStoryByName(name);
 
 		}, new JsonTransformer());
+		
 		
 		get("/storylist", "application/json", (request, response) -> {
 //			String name = request.params(":name");
@@ -50,7 +61,7 @@ public class Restful extends BlogController {
 
 		}, new JsonTransformer());
 
-		get("/wiki/:keyword", "application/json", (request, response) -> {
+		get("/wiki2/:keyword", "application/json", (request, response) -> {
 //			String name = request.params(":name");
 //			System.out.println("name: " + name);
 			response.raw().setContentType("application/json");
@@ -61,6 +72,43 @@ public class Restful extends BlogController {
 			return PLMDAO.findWiki(keyword);
 
 		}, new JsonTransformer());
+		
+		get("/wiki/:keyword", "application/json", (request, response) -> {
+//			String name = request.params(":name");
+//			System.out.println("name: " + name);
+			response.raw().setContentType("application/json");
+
+			String keyword = request.params(":keyword");
+			
+			String encoded = URLEncoder.encode(keyword,"UTF-8");
+					
+			System.out.println("keyword: " + encoded);
+			
+			
+			
+			return PLMDAO.searchWiki(encoded);
+
+		}, new JsonTransformer());
+		
+		get("/save/:keyword", "application/json", (request, response) -> {
+//			String name = request.params(":name");
+//			System.out.println("name: " + name);
+			response.raw().setContentType("application/json");
+
+			String keyword = request.params(":keyword");
+			
+			String encoded = URLEncoder.encode(keyword,"UTF-8");
+					
+			System.out.println("keyword: " + encoded);
+			
+			
+			
+			return PLMDAO.saveMemo(keyword);
+			
+			
+
+		}, new JsonTransformer());
+		
 		
 		get("/batchlistjs", "application/json", (request, response) -> {
 
