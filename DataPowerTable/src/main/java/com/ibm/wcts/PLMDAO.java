@@ -876,7 +876,7 @@ public class PLMDAO {
 			
 		}else{
 			story=storyCollection.find(eq("Name", "None")).first();
-			System.out.println("No story found!");
+			System.out.println("Sorry, can not find it!");
 
 		}
 		return story;
