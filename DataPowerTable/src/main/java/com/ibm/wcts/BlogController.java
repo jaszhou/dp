@@ -134,11 +134,11 @@ public class BlogController {
 			setupConnection();
 
 			new BlogController();
-			new WorkspaceRoute();
+			
 			new PLMSearchRoute();
 			new ListManagementRoute();
 			new UserManagementRoute();
-			new Restful();
+			
 
 			// new BlogController("mongodb://localhost");
 		}
