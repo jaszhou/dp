@@ -138,6 +138,7 @@ public class BlogController {
 			new PLMSearchRoute();
 			new ListManagementRoute();
 			new UserManagementRoute();
+			new WorkspaceRoute();
 			
 
 			// new BlogController("mongodb://localhost");

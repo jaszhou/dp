@@ -3,7 +3,7 @@
      <div class="panel-heading">Case Attachments</div>
      <div class="panel-body">
    
-   <#if match["attachment"]??>
+   <#if match["Attachment"]??>
 
    <table class="table table-striped table-hover">
     <tr>
@@ -12,7 +12,7 @@
      <td>Creator</td>
      <td>Date</td>
     </tr> 
-    <#list match["attachment"] as rec>
+    <#list match["Attachment"] as rec>
     <tr>
 
 		<#assign mylist=rec["file"]?split("/")>
