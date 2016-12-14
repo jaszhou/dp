@@ -904,6 +904,21 @@ public class PLMDAO {
 		return new Document("list",mylist);
 	}
 	
+	public Document findWiki(String keyword) {
+
+		// posts = postsCollection.find().sort(new
+		// Document("date",-1)).limit(limit).into(new ArrayList<Document>());
+		// post = postsCollection.find(eq("permalink",permalink)).first();
+	
+		String answer = Restful.html2text(RestClient.getAnswer(keyword));
+		
+		if(answer==""){
+			answer="Can not be found";
+		}
+		
+		return new Document("answer",answer);
+	}
+
 	public Document saveMemo(String keyword) {
 		
 		Document document = new Document();
@@ -920,6 +935,21 @@ public class PLMDAO {
 
 	}
 	
+	
+	public Document searchWiki(String keyword) {
+
+		// posts = postsCollection.find().sort(new
+		// Document("date",-1)).limit(limit).into(new ArrayList<Document>());
+		// post = postsCollection.find(eq("permalink",permalink)).first();
+	
+		String answer = Restful.html2text(RestClient.searchAnswer(keyword));
+		
+		if(answer==""){
+			answer="Can not be found";
+		}
+		
+		return new Document("answer",answer);
+	}
 	
 	public Document findClientByID(int clientid) {
 

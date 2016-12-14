@@ -90,7 +90,7 @@
 				class="btn btn-default">Add Enity</a> 
 			<a href="/searchentity?listname=${listname}" class="btn btn-default">Search
 				Enity</a>
-			<a  id="export" href="/inboxexportcsv?name=${listname}" class="btn btn-default pull-right"><span class="glyphicon glyphicon-cloud-download"></span> Export to .CSV file</a>
+			<a  id="export" href="/inboxexportcsv?listname=${listname}&filter=<#if filter??>${filter}</#if>" class="btn btn-default pull-right"><span class="glyphicon glyphicon-cloud-download"></span> Export to .CSV file</a>
 				
 				
 			</td> 

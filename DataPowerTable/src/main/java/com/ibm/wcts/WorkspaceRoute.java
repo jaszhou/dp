@@ -166,20 +166,13 @@ public class WorkspaceRoute extends BlogController {
 				
 					
 					
-//					newDoc=before.append("Attachment", attach);
-//							
-//					Document updatEntity = new Document("$set", newDoc);
-//					
-//					System.out.println("new Doc: " + updatEntity);
-//					
-					Document replace = new Document("$push", new Document("Attachment", attach));
-
-					System.out.println(replace.toJson());
-
-					c.updateOne(search, replace);
+					newDoc=before.append("Attachment", attach);
+							
+					Document updatEntity = new Document("$set", newDoc);
 					
+					System.out.println("new Doc: " + updatEntity);
 
-//					c.updateOne(search, updatEntity);
+					c.updateOne(search, updatEntity);
 					
 
 				
@@ -386,16 +379,36 @@ public class WorkspaceRoute extends BlogController {
 			protected void doHandle(Request request, Response response, Writer writer)
 					throws IOException, TemplateException {
 
-				String status = request.queryParams("status");
+				
+				String listname = request.queryParams("listname");
+//				String page = request.queryParams("page");
+				String filter = request.queryParams("filter");
+
+				System.out.println("listname: " + listname);
+
+				MongoCollection<Document> alist = clientDatabase.getCollection(listname);
+
+		
+				
+//				String status = request.queryParams("status");
 
 				SimpleHash root = new SimpleHash();
 				
-				System.out.println("got status: "+status);
+//				System.out.println("got status: "+status);
+				
+				Document field = new Document();
+				field = Document.parse(filter);
+				
+				System.out.println("search: " + field.toJson());
 
-				List<Document> matches = PLMDAO.getMatchByStatus(status);
+				List<Document> recs = alist.find(field).sort(new Document("_id",-1)).into(new ArrayList<Document>());
+
+//				SimpleHash root = new SimpleHash();
+
+//				List<Document> matches = PLMDAO.getMatchByStatus(status);
 
 
-				root.put("matches", matches);
+				root.put("matches", recs);
 
 
 
@@ -405,6 +418,13 @@ public class WorkspaceRoute extends BlogController {
 				root.put("roles", roles);
 
 				
+			
+				
+				response.raw().setContentType("application/octet-stream");
+			    response.header("Content-Disposition","inline; filename="+"export.csv");
+
+			    
+			
 				
 				template.process(root, writer);
 

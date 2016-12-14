@@ -714,6 +714,7 @@ public class ListManagementRoute extends BlogController {
 				root.put("username", username);
 				List<String> roles = sessionDAO.findUserRoleBySessionId(getSessionCookie(request));
 				root.put("roles", roles);
+				root.put("filter", filter);
 
 				template.process(root, writer);
 
