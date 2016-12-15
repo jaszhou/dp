@@ -26,7 +26,7 @@
 			<table class="table table-striped table-hover">
 				<#list node?keys as key> 
 				
-				<#if key !='_id'>
+				<#if key !='_id' && key !='Attachment' >
 				
 				<#if node[key]??>
                   <#assign value = node[key]>
