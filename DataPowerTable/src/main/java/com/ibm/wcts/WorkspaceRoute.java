@@ -455,6 +455,27 @@ public class WorkspaceRoute extends BlogController {
 
 			}
 		});
+		
+		get("/dashboard", new FreemarkerBasedRoute("dashboard.ftl") {
+			@Override
+			protected void doHandle(Request request, Response response, Writer writer)
+					throws IOException, TemplateException {
+
+				String listname = request.queryParams("name");
+				
+
+				SimpleHash root = new SimpleHash();
+				
+				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
+				root.put("username", username);
+				List<String> roles = sessionDAO.findUserRoleBySessionId(getSessionCookie(request));
+				root.put("roles", roles);
+
+				root.put("listname", listname);
+				template.process(root, writer);
+
+			}
+		});
 
 		get("/searchmatchaction", new FreemarkerBasedRoute("searchmatchlist.ftl") {
 
