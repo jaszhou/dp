@@ -166,9 +166,11 @@ public class WorkspaceRoute extends BlogController {
 				
 					
 					
-					newDoc=before.append("Attachment", attach);
-							
-					Document updatEntity = new Document("$set", newDoc);
+					//newDoc=before.append("Attachment", attach);
+						
+					newDoc = new Document("Attachment",attach);
+					
+					Document updatEntity = new Document("$push", newDoc);
 					
 					System.out.println("new Doc: " + updatEntity);
 
