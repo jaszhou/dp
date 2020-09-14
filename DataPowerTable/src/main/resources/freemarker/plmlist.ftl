@@ -41,7 +41,9 @@
 				<#list recs as match>
 				<tr>
 					<td>${match["id"]?c}</td>
-					<td><a href="/list?id=${match["id"]}&name=${match["name"]}">${match["name"]}</a></td>
+					
+					<td><a href="/dashboard?name=${match["name"]}">${match["name"]}</a></td>
+					
 					<td><#if match["creator"]??>${match["creator"]}</#if></td>
 					<td>${match["date"]?datetime}</td>
 					<td><#if match["description"]??>${match["description"]}</#if></td>

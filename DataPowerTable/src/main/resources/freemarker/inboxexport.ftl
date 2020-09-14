@@ -20,7 +20,7 @@
                 <#else>
                   <#assign value = "">
 				</#if>
-				<#t>${value}<#t>,
+				<#t>"${value}"<#t>,
 		</#list>	
 		</@compress>		
       

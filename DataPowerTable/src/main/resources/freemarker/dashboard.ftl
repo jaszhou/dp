@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>All Lists</title>
+<title>Dash Board</title>
 
 </head>
 
@@ -16,21 +16,38 @@
 		<div class="panel panel-default">
 
 			<div class="panel-heading">
-				<strong>Manage Lists</strong>
+				<strong>Search for instance</strong>
 			</div>
 
 			<div class="panel-body">
-				<p>
-					You may <a href="/newplm"><i class="fa fa-cloud-upload"></i> upload</a> a .csv file to create a new
-					list for screening.
-				</p>
+				<form method="post" action="/searchaction" style="margin-top: 30px;">
+
+
+				<div class="form-group">
+
+						<input type="text" class="form-control" placeholder="Instance #"
+							name="Instance #" required> </input> 
+			    </div>
+
+				<div class="form-group">
+					<input type="hidden" class="form-control" name="listname"
+						value="${listname}"></input>
+				</div>
+
+
+				<button type="submit" class="btn btn-primary">
+					<span class="glyphicon glyphicon-search"></span> Search Instance
+				</button>
+				
+				</form>
+		    </div>
 			</div>
 
 			<#if recs??>
 			<table class="table table-striped table-hover">
 				<tr>
-					<td>List ID</td>
-					<td>List Name</td>
+					<td>Instance#</td>
+					<td>Client Name</td>
 					<td>Creator</td>
 					<td>Date</td>
 					<td>Description</td>

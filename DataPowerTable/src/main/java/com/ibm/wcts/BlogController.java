@@ -125,7 +125,7 @@ public class BlogController {
 //			Spark.secure(keystoreFile, keystorePassword, null, null);
 	
 			
-//			Spark.secure(keystoreFile, keystorePassword, truststoreFile, keystorePassword);
+			Spark.secure(keystoreFile, keystorePassword, truststoreFile, keystorePassword);
 
 //			get("/secureHello", (req, res) -> "Hello Secure World");
 			
@@ -138,6 +138,8 @@ public class BlogController {
 			new PLMSearchRoute();
 			new ListManagementRoute();
 			new UserManagementRoute();
+			new WorkspaceRoute();
+			
 			new Restful();
 
 			// new BlogController("mongodb://localhost");

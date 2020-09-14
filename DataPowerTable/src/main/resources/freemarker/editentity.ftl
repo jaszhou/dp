@@ -8,7 +8,8 @@
 <body>
 
 	<#include "menu.ftl">
-
+    <script src="/js/matchview.js"></script>
+	<script src="/js/jquery.form.js"></script>
 
 	<div class="container">
 
@@ -21,7 +22,7 @@
 		<#assign value =
 		node[key]> 
 		
-		<#if key != "_id"> 
+		<#if key != "_id" && key != "Attachment" > 
 		
 		<label>${key}</label> 
 		
@@ -89,7 +90,61 @@
 			
 			  <a href="/editentity?_id=${listdoc._id}&listname=${listname}"
 						class="btn btn-default">Edit</a> 
+			
+			<a id="showattachment" href="/attachment?entityid=${listdoc._id}&listname=${listname}" class="btn btn-default">Show Attachments</a> <a
+								href="javascript:history.back()" class="btn btn-default">Back</a>
+			
 						
+			</form>
+			
+	    <div id="attachment"></div>
+
+		<form method="POST" id="myForm" action="/attachfile"
+			style="margin-top: 30px;" enctype="multipart/form-data">
+
+			<div class="panel panel-default">
+
+				<div class="panel-heading">Upload attachment</div>
+				<div class="panel-body">
+			
+					<div class="form-group">
+						<input type="hidden" class="form-control" name="listname"
+							value="${listname}"></input>
+				
+				    	<input type="hidden" class="form-control" name="entityid"
+					    	value="${listdoc._id}"></input>
+					</div>
+
+
+					<div class="form-group">
+
+						<input type="file" class="form-control"
+							placeholder="Upload a file" name="upload" size="20" required>
+						</input>
+
+					</div>
+
+					<div class="form-group">
+						<label for="upload">Description:</label> <input type="text"
+							class="form-control" placeholder="Description" name="description"
+							size="20"> </input>
+					</div>
+
+
+					<button type="submit" class="btn btn-primary">Attach</button>
+
+					<a id="selectp" href="" class="btn btn-default">Reset</a>
+
+					<p>
+					<div class="progress">
+						<div class="bar"></div>
+						<div class="percent">0%</div>
+					</div>
+
+					<div id="status"></div>
+
+				</div>
+		</form>			
 	</div>
 
 	<#include "footer.ftl">

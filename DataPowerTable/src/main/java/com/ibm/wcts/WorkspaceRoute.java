@@ -70,15 +70,24 @@ public class WorkspaceRoute extends BlogController {
 
 				try {
 
-					String matchid = null;
+					String entityid = null;
+					
+					String listname = null;
 
 					String description = null;
 
-					Part idPart = request.raw().getPart("matchid");
+					Part idPart = request.raw().getPart("entityid");
 
 					try (Scanner scanner = new Scanner(idPart.getInputStream())) {
-						matchid = scanner.nextLine(); // read from the part
+						entityid = scanner.nextLine(); // read from the part
 					}
+					
+					Part listnamePart = request.raw().getPart("listname");
+
+					try (Scanner scanner = new Scanner(listnamePart.getInputStream())) {
+						listname = scanner.nextLine(); // read from the part
+					}
+					
 
 					Part dPart = request.raw().getPart("description");
 
@@ -93,11 +102,25 @@ public class WorkspaceRoute extends BlogController {
 						}
 					}
 
-					System.out.println("matchid: " + matchid + " desc: " + description);
+					System.out.println("entityid: " + entityid + " listname: "+ listname  +" desc: " + description);
 
 					// create a new collection
-					MongoCollection<Document> c = clientDatabase.getCollection("match");
+					MongoCollection<Document> c = clientDatabase.getCollection(listname);
 
+//					clientDatabase.getCollection(listname)
+					
+					Document search = new Document("_id", new ObjectId(entityid));
+
+					Document newDoc = new Document("_id", new ObjectId(entityid));
+
+	                System.out.println(search.toJson());
+	                
+	               	                
+					
+					Document before = c.find(search).first();
+
+					System.out.println(before.toJson());
+					
 					final Part file = request.raw().getPart("upload");
 
 					String fileName = getSubmittedFileName(file);
@@ -110,7 +133,7 @@ public class WorkspaceRoute extends BlogController {
 
 					String dir = path.toFile().getAbsolutePath();
 
-					File matchdir = new File(dir + File.separator + matchid );
+					File matchdir = new File(dir + File.separator + entityid );
 					
 					if (!matchdir.exists()) {
 						if (matchdir.mkdir()) {
@@ -120,7 +143,7 @@ public class WorkspaceRoute extends BlogController {
 						}
 					}
 
-					String newfile = dir + File.separator + matchid + File.separator + fileName;
+					String newfile = dir + File.separator + entityid + File.separator + fileName;
 
 					path = Paths.get(newfile);
 
@@ -136,16 +159,25 @@ public class WorkspaceRoute extends BlogController {
 					Document attach = new Document("desc", description);
 					attach.append("file", newfile).append("creator", username).append("lastUpdate", new Date());
 
-					int mid = Integer.valueOf(matchid).intValue();
+//					int mid = Integer.valueOf(entityid).intValue();
 
 					// List<Document> attachs = new ArrayList<Document>();
+					
+				
+					
+					
+					//newDoc=before.append("Attachment", attach);
+						
+					newDoc = new Document("Attachment",attach);
+					
+					Document updatEntity = new Document("$push", newDoc);
+					
+					System.out.println("new Doc: " + updatEntity);
 
-					Document replace = new Document("$push", new Document("attachment", attach));
+					c.updateOne(search, updatEntity);
+					
 
-					System.out.println(replace.toJson());
-
-					c.updateOne(eq("id", mid), replace);
-
+				
 				} catch (Exception e) {
 					response.redirect("/internal_error?msg=" + BlogController.encode(e.toString()));
 					e.printStackTrace();
@@ -349,26 +381,54 @@ public class WorkspaceRoute extends BlogController {
 			protected void doHandle(Request request, Response response, Writer writer)
 					throws IOException, TemplateException {
 
-				String name = request.queryParams("name");
 				
-				// get the custom list via name
-				MongoCollection<Document> alist = clientDatabase.getCollection(name);
+				String listname = request.queryParams("listname");
+//				String page = request.queryParams("page");
+				String filter = request.queryParams("filter");
+
+				System.out.println("listname: " + listname);
+
+				MongoCollection<Document> alist = clientDatabase.getCollection(listname);
+
+		
+				
+//				String status = request.queryParams("status");
 
 				SimpleHash root = new SimpleHash();
+				
+//				System.out.println("got status: "+status);
+				
+				Document field = new Document();
+				field = Document.parse(filter);
+				
+				System.out.println("search: " + field.toJson());
 
-				List<Document> recs = alist.find().into(new ArrayList<Document>());
+				List<Document> recs = alist.find(field).sort(new Document("_id",-1)).into(new ArrayList<Document>());
+
+//				SimpleHash root = new SimpleHash();
+
+//				List<Document> matches = PLMDAO.getMatchByStatus(status);
+
+
 				root.put("matches", recs);
+
+
 
 				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
 				root.put("username", username);
-
 				List<String> roles = sessionDAO.findUserRoleBySessionId(getSessionCookie(request));
 				root.put("roles", roles);
+
+				
+			
 				
 				response.raw().setContentType("application/octet-stream");
-			    response.header("Content-Disposition","inline; filename="+"dpt.csv");
+			    response.header("Content-Disposition","inline; filename="+"export.csv");
 
-			    template.process(root, writer);
+			    
+			
+				
+				template.process(root, writer);
 
 			}
 		});
@@ -380,9 +440,12 @@ public class WorkspaceRoute extends BlogController {
 
 				List<Document> actions = null;
 
-			
+				Document session = sessionDAO.findSessionById(getSessionCookie(request));
+
+				String clientname = session.getString("clientname");
+
 				SimpleHash root = new SimpleHash();
-				actions = PEDAO.findPE("1000");
+				actions = PLMDAO.getActionList(clientname,100);
 
 				root.put("actions", actions);
 				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
@@ -390,6 +453,27 @@ public class WorkspaceRoute extends BlogController {
 				List<String> roles = sessionDAO.findUserRoleBySessionId(getSessionCookie(request));
 				root.put("roles", roles);
 
+				template.process(root, writer);
+
+			}
+		});
+		
+		get("/dashboard", new FreemarkerBasedRoute("dashboard.ftl") {
+			@Override
+			protected void doHandle(Request request, Response response, Writer writer)
+					throws IOException, TemplateException {
+
+				String listname = request.queryParams("name");
+				
+
+				SimpleHash root = new SimpleHash();
+				
+				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
+				root.put("username", username);
+				List<String> roles = sessionDAO.findUserRoleBySessionId(getSessionCookie(request));
+				root.put("roles", roles);
+
+				root.put("listname", listname);
 				template.process(root, writer);
 
 			}
@@ -961,17 +1045,24 @@ public class WorkspaceRoute extends BlogController {
 			protected void doHandle(Request request, Response response, Writer writer)
 					throws IOException, TemplateException {
 
-				String matchid = request.queryParams("matchid");
+				String listname = request.queryParams("listname");
+				String entityid = request.queryParams("entityid");
 
-				System.out.println("matchid: " + matchid);
+				Document search = new Document("_id", new ObjectId(entityid));
+				
+				MongoCollection<Document> alist = clientDatabase.getCollection(listname);
+
+				System.out.println("listname: " + listname);
+
+
+				Document before = alist.find(search).first();
 
 				SimpleHash root = new SimpleHash();
 
-				Document match = PLMDAO.getMatchByID(matchid);
 
-				root.put("match", match);
+				root.put("match", before);
 
-				System.out.println(match);
+				System.out.println(before);
 				String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
 				root.put("username", username);
 				List<String> roles = sessionDAO.findUserRoleBySessionId(getSessionCookie(request));
